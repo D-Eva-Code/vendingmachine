@@ -1,113 +1,96 @@
-vendingmachine={
-    drinks:{"fanta":{price:230, code:55324},
-            "Coke":{price:250, code:51234}           
-}
+let vendingmachine = {
+  drinks: {
+    fanta: { price: 230, code: 55324, quantity: 10 },
+    coke: { price: 250, code: 51234, quantity: 12 }
+  }
 };
-bougthitems=[];
 
-let buttons=document.querySelectorAll(".key");
-
-
-let displayContainer= document.getElementById("displaycontent");
-// const drinkdisplay = document.querySelectorAll(".drinkdisplay");
+let bougthitems = [];
+let selectedDrink = null;
 
 
-let drink= Object.keys(vendingmachine.drinks);//[fanta, coke]
-function checkcode(code){
-    
-    for (let i=0; i<drink.length; i++){
-        let eachdrink= drink[i];//fanta, coke
-        let drinkdata= vendingmachine.drinks[eachdrink]
-        let drinkprice= drinkdata.price;
-        let drinkcode = drinkdata.code;
-
-        if (code === drinkcode){
-                displayContainer.value= `${eachdrink}: # ${drinkprice}\n Insert cash`;
-                return true;                           
-            }
-
-    }
-       
-    displayContainer.value= "Invalid code";
-    return false;
-     
-
-}
-
-
-buttons.forEach(button=>{
-button.addEventListener("click", function(event){
-
-// You get the value from its 'data-value' attribute.
-let buttonValue = event.target.getAttribute("data-value");
-
-if (buttonValue ==="C"){
-    displayContainer.value= "";
-}
-else if(buttonValue === "Enter"){
-    const Entercode= parseInt(displayContainer.value.trim());
-    checkcode(Entercode);
-    console.log(displayContainer.value);
-}
-else{
-    displayContainer.value+=buttonValue;
-}
-
-});
-});
-
-
-
-// const drinkImages = {
-//   fanta: ["images/fantaa.png", "images/fantaa.png"],
-//   coke: ["images/cokee.png"]
-// };
-
-// const allDrinkHTML = Object.keys(drinkImages)
-//   .map(drink =>
-//     drinkImages[drink]
-//       .map(url => `<img src="${url}" class="drink-img" height="70" width="30" alt="${drink}">`)
-//       .join('')
-//   )
-//   .join('');
-
-
-// drinkdisplay.forEach(div => {
-//   div.innerHTML = allDrinkHTML;
-// });
+const buttons = document.querySelectorAll(".key");
+const displayContainer = document.getElementById("displaycontent");
 const drinkDisplays = document.querySelectorAll(".drinkdisplay");
 
+// drink images for display
 const drinkImages = {
-  fanta: ["images/fantaa.png", 
-    "images/fantaa.png", 
-    "images/fantaa.png",
-"images/fantaa.png",
-"images/fantaa.png",
-"images/fantaa.png",
-"images/fantaa.png",
-"images/fantaa.png",
-"images/fantaa.png",
-"images/fantaa.png",
-"images/fantaa.png",
-"images/fantaa.png",
-"images/fantaa.png",
-"images/fantaa.png",],
-  coke: ["images/cokee.png", "images/cokee.png", "images/cokee.png","images/cokee.png","images/cokee.png","images/cokee.png","images/cokee.png","images/cokee.png","images/cokee.png","images/cokee.png","images/cokee.png","images/cokee.png","images/cokee.png","images/cokee.png","images/cokee.png",]
+  fanta: Array(15).fill("images/fantaa.png"),
+  coke: Array(15).fill("images/cokee.png")
 };
 
-// Get the list of drink names, e.g. ["fanta", "coke"]
-const drinkNames = Object.keys(drinkImages);
 
-// Loop through all drink display divs
-drinkDisplays.forEach((div, i) => {
-  // Pick a drink name using the index — cycles between fanta and coke
-  const drink = drinkNames[i % drinkNames.length];
+function updateDrinkDisplay() {
+  for (let drink in vendingmachine.drinks) {
+    const quantity = vendingmachine.drinks[drink].quantity;
+    const drinkDiv = document.getElementById(`${drink}Display`);
 
-  // Build HTML for that drink’s images
-  const drinkHTML = drinkImages[drink]
-    .map(url => `<img src="${url}" class="drink-img" height="70" width="30" alt="${drink}">`)
-    .join('');
+    const drinkHTML = drinkImages[drink]
+      .slice(0, quantity)
+      .map(url => `<img src="${url}" height="70" width="30" alt="${drink}">`)
+      .join('');
 
-  // Put those images into this div
-  div.innerHTML = drinkHTML;
+    drinkDiv.innerHTML = drinkHTML;
+  }
+}
+
+
+
+function checkcode(code) {
+ for (let name in vendingmachine.drinks) {
+  const drinkdata = vendingmachine.drinks[name];
+
+
+    if (code === drinkdata.code) {
+      if (drinkdata.quantity <= 0) {
+        displayContainer.value = `${name} is out of stock`;
+        return null;
+      } else {
+        displayContainer.value = `${name}: ₦${drinkdata.price}\nInsert cash or press "Pay"`;
+        return name;
+      }
+    }
+  }
+
+  displayContainer.value = "Invalid code";
+  return false;
+}
+
+
+buttons.forEach(button => {
+  button.addEventListener("click", event => {
+    let buttonValue = event.target.getAttribute("data-value");
+
+    if (buttonValue === "C") {
+      displayContainer.value = "";
+      selectedDrink = null;
+    } 
+    else if (buttonValue === "Enter") {
+      const Entercode = parseInt(displayContainer.value.trim());
+      selectedDrink = checkcode(Entercode);
+    } 
+    else if (buttonValue === "Pay") {
+      if (selectedDrink) {
+        const drinkdata = vendingmachine.drinks[selectedDrink];
+
+        if (drinkdata.quantity > 0) {
+          drinkdata.quantity =drinkdata.quantity- 1;
+          bougthitems.push(selectedDrink);
+
+          displayContainer.value = "Thank you for your purchase";
+          updateDrinkDisplay(selectedDrink);
+        } else {
+          displayContainer.value = `${selectedDrink} is out of stock`;
+        }
+      } else {
+        displayContainer.value = "Enter drink code first!";
+      }
+    } 
+    else {
+      displayContainer.value =displayContainer.value+ buttonValue;
+    }
+  });
 });
+
+
+updateDrinkDisplay();

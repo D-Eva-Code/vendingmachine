@@ -1,19 +1,18 @@
-/* 1. Center the entire section nicely */
 body {
   background-color: #1a1a1a;
   margin: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh; /* ensure full height */
+  min-height: 100vh; 
 }
 
-/* 2. Main container */
+
 .keypadcontainer {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  gap: 40px; /* creates space between keypad and shelf */
+  gap: 40px; 
   padding: 40px;
   width: 100%;
   max-width: 900px;
@@ -22,11 +21,10 @@ body {
   padding-bottom: 200px!important;
 }
 
-/* 3. Keypad section */
 .keypadsmallcontainer {
   background-color: #0d0d1a;
-  width: 240px; /* reduced from 280px */
-  padding: 16px; /* slightly smaller padding */
+  width: 240px; 
+  padding: 16px; 
   border-radius: 6px;
   display: flex;
   flex-direction: column;
@@ -34,7 +32,7 @@ body {
   box-shadow: 0 0 15px rgba(0, 191, 255, 0.2);
 }
 
-/* 4. Buttons smaller */
+
 button.key {
   width: 55px;
   height: 55px;
@@ -44,21 +42,18 @@ button.key {
 
 .codeheading {
     color: white;
-    /* Removed width: 15%!important; as it was too small */
     width: 100%;
     text-align: left;
-    margin-top: 15px; /* Add space above the code section */
+    margin-top: 15px; 
 }
 .codeparagraph {
     color: white;
-    line-height: 1.5; /* Increased for readability */
-    /* Set alignment to match the image */
+    line-height: 1.5; 
+
     width: 100%;
     text-align: left;
-    margin: 3px 0; /* Adjust spacing between code lines */
+    margin: 3px 0; 
 }
-
-/* 5. Shelf (right container) */
 .keypadsmallcontainer2 {
   background-color: white;
   width: 500px;
