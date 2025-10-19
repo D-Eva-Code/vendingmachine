@@ -64,3 +64,12 @@ button.key {
   align-items: center;
   box-shadow: 0 0 15px rgba(0, 191, 255, 0.2);
 }
+.drinkdisplay {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  width: 220px;  
+  margin-bottom: 0px;
+  padding: 10px;
+  border-radius: 10px;
+}

@@ -1,10 +1,17 @@
-let vendingmachine = {
-  drinks: {
-    fanta: { price: 230, code: 55324, quantity: 10 },
-    coke: { price: 250, code: 51234, quantity: 12 }
-  }
-};
+let vendingmachine = JSON.parse(localStorage.getItem("vendingmachine"));
 
+if (!vendingmachine) {
+  vendingmachine = {
+    drinks: {
+      fanta: { price: 230, code: 55324, quantity: 30 },
+      coke: { price: 250, code: 51234, quantity: 30 }
+    }
+  };
+}
+
+function saveMachine() {
+  localStorage.setItem("vendingmachine", JSON.stringify(vendingmachine));
+}
 let bougthitems = [];
 let selectedDrink = null;
 
@@ -15,8 +22,8 @@ const drinkDisplays = document.querySelectorAll(".drinkdisplay");
 
 // drink images for display
 const drinkImages = {
-  fanta: Array(15).fill("images/fantaa.png"),
-  coke: Array(15).fill("images/cokee.png")
+  fanta: Array(30).fill("images/fantaa.png"),
+  coke: Array(30).fill("images/cokee.png")
 };
 
 
@@ -78,6 +85,8 @@ buttons.forEach(button => {
           bougthitems.push(selectedDrink);
 
           displayContainer.value = "Thank you for your purchase";
+
+           saveMachine();
           updateDrinkDisplay(selectedDrink);
         } else {
           displayContainer.value = `${selectedDrink} is out of stock`;
